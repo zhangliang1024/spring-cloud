@@ -1,0 +1,30 @@
+server:
+  port: 9800
+spring:
+  application:
+    name: springcloud-hystrix
+
+
+#  网上有位朋友对 Hystrix的熔断、降级、隔离说的也很好：
+#   - https://www.cnblogs.com/Leo_wl/p/9054906.html
+#  HystrixDashboard 需要通过 actuator
+#  配置暴露端口，management.endpoints.web.exposure.include=*
+#  HystrixDashboard
+#  访问地址：http://localhost:port/hystrix ，进入Dashboard界面，在文本框输入 http://localhost:port/actuator/hystrix.stream
+#  多个项目的HystrixDashboard，可以通过turbine聚合
+#  - 参考：https://blog.csdn.net/zhuyu19911016520/article/details/85561096
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/

@@ -1,0 +1,25 @@
+server:
+  port: 9900
+spring:
+  application:
+    name: springcloud-turbine
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+turbine:
+  app-config: springcloud-hystrix
+  aggregator:
+    cluster-config: default
+  cluster-name-expression: new String("default")
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/
+

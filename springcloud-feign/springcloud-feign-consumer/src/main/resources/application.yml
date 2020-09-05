@@ -1,0 +1,75 @@
+server:
+  port: 9700
+spring:
+  application:
+    name: springcloud-feign-consumer
+
+# Feign支持对请求与响应进行压缩，已提高通性的效率
+# 开启Gzip压缩
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types: text/html,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+  # 使用OkHttp代替 URLConnection
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+
+  # Feign 启用hystrix 才能 超时熔断、降级
+  hystrix:
+    enabled: true
+
+# 使用Feign调用接口分两层：
+# 1. ribbon的调用和hystrix的调用，所以ribbon的超时时间和hystrix的超时时间的结合就是Feign的超时时间；
+# 2. 一般情况下：ribbon的超时时间要 < hystrix的超时时间 [因为涉及到ribbon的重试机制]
+# 3. 如果配置ribbon的重试，hystrix的超时时间要大于ribbon的超时时间，ribbon才会重试
+# 4.  hystrix的超时时间=(1 + MaxAutoRetries + MaxAutoRetriesNextServer) * ReadTimeout 比较好，具体看需求
+
+# 针对具体接口的超时熔断设置：
+# ★ [Zuul、Ribbon、Feign、Hystrix使用时的超时时间(timeout)设置问题](https://blog.csdn.net/mxmxz/article/details/84633098)
+# [feign的ribbon超时配置和hystrix的超时配置](https://blog.csdn.net/l848168/article/details/85045173)
+# [springcloud之Feign、ribbon设置超时时间和重试机制的总结](https://blog.csdn.net/east123321/article/details/82385816)
+
+# hystrix 超时配置
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+    "HelloFeignService#hello(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+
+
+
+# Ribbon 超时配置
+ribbon:
+  # 同一台实例最大重试次数,不包括首次调用; 当Eureka中可以找到服务，但是服务连不上时将会重试
+  MaxAutoRetries: 1
+  #切换实例的重试次数; 重试负载均衡其他的实例最大重试次数,不包括首次调用
+  MaxAutoRetriesNextServer: 1
+  #是否所有操作都重试; 如果是get则可以，如果是post,put等操作没有实现幂等的情况下是很危险的，所以设置为false
+  OkToRetryOnAllOperations: false
+  #请求连接的超时时间
+  ReadTimeout: 10000
+  #请求处理的超时时间
+  ConnectionTimeout: 10000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/
+

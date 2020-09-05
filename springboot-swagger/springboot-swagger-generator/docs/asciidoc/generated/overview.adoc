@@ -1,0 +1,25 @@
+= springboot利用swagger构建api文档
+
+
+[[_overview]]
+== 概览
+简单优雅的restfun风格
+
+
+=== 版本信息
+[%hardbreaks]
+__版本__ : 1.0
+
+
+=== URI scheme
+[%hardbreaks]
+__域名__ : localhost:8081
+__基础路径__ : /
+
+
+=== 标签
+
+* user-controller : User Controller
+
+
+

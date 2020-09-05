@@ -1,0 +1,101 @@
+
+h2. 资源 {anchor:paths}
+
+h3. User-controller {anchor:user-controller_resource}
+User Controller
+
+
+h4. 添加用户信息 {anchor:adduserusingpost}
+{noformat}
+POST /user/add
+{noformat}
+
+
+h5. 说明
+添加用户信息
+
+
+h5. 响应
+
+||HTTP代码||说明||类型||
+|*200*||OK||integer (int32)|
+|*201*||Created||无内容|
+|*401*||Unauthorized||无内容|
+|*403*||Forbidden||无内容|
+|*404*||Not Found||无内容|
+
+
+h5. 消耗
+
+* {noformat}application/json{noformat}
+
+
+h5. 生成
+
+* {noformat}application/json;charset=UTF-8{noformat}
+
+
+h5. HTTP请求示例
+
+h6. 请求 path
+{code}
+/user/add
+{code}
+
+
+h5. HTTP响应示例
+
+h6. 响应 200
+{code:language=json}
+0
+{code}
+
+
+h4. 查看信息 {anchor:findalluserusingget}
+{noformat}
+GET /user/all/{pageNum}/{pageSize}
+{noformat}
+
+
+h5. 说明
+查看用户信息
+
+
+h5. 参数
+
+||类型||名称||说明||类型||
+|*Path*|*pageNum*\\ \\ _必填_||页码||integer (int32)|
+|*Path*|*pageSize*\\ \\ _必填_||每页个数||integer (int32)|
+
+
+h5. 响应
+
+||HTTP代码||说明||类型||
+|*200*||OK||object|
+|*401*||Unauthorized||无内容|
+|*403*||Forbidden||无内容|
+|*404*||Not Found||无内容|
+
+
+h5. 生成
+
+* {noformat}application/json;charset=UTF-8{noformat}
+
+
+h5. HTTP请求示例
+
+h6. 请求 path
+{code}
+/user/all/0/0
+{code}
+
+
+h5. HTTP响应示例
+
+h6. 响应 200
+{code:language=json}
+"object"
+{code}
+
+
+

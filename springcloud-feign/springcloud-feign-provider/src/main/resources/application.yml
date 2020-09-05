@@ -1,0 +1,13 @@
+server:
+  port: 9600
+spring:
+  application:
+    name: springcloud-feign-provider
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/
+

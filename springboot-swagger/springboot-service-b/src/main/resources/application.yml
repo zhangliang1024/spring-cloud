@@ -1,0 +1,10 @@
+
+server:
+  port: 10020
+spring:
+  application:
+    name: service-b
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/

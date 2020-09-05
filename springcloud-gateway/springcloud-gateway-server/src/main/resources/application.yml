@@ -1,0 +1,72 @@
+server:
+  port: 8888
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+      - id: consumer-service
+        uri: lb://consumer-service
+        predicates:
+        - Path=/consumer/**
+        filters:
+        - StripPrefix=1
+#        - TokenAuthenticationFilter
+        - name: Hystrix
+          args:
+            name: consumercmd #指定command的key
+            fallbackUri: 'forward:/consumer/fallback'
+        - name: RequestRateLimiter
+          args:
+            key-resolver: '#{@apiKeyResolver}'   #  用于限流解析器的Bean对象名字，使用SPEL表达式获取
+            redis-rate-limiter.replenishRate: 2  # 令牌桶每秒填充速率
+            redis-rate-limiter.burstCapacity: 10 # 令牌桶总容量
+      default-filters:
+      - name: Hystrix
+        args:
+          name: default
+          fallbackUri: 'forward:/default/fallback'
+
+hystrix:
+  command:
+    consumercmd:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 5000
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 3000
+  shareSecurityContext: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug

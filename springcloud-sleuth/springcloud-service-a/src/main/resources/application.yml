@@ -1,0 +1,21 @@
+server:
+  port: 8071
+spring:
+  application:
+    name: service-a
+  sleuth:
+    web:
+      enabled: true
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://localhost:9412
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@localhost:10025/eureka/
+
